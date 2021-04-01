@@ -2,28 +2,24 @@ import { debug } from '@actions/core';
 import * as github from '@actions/github';
 import { wait } from './wait';
 
-export async function checkStatus() {
+export async function checkStatus(token: string) {
 
-  const token = process.env['GITHUB_TOKEN'] || null;
-  if (token) {
-    const octokit = github.getOctokit(token);
-    const owner = github.context.repo.owner;
-    const repo = github.context.repo.repo;
+  const octokit = github.getOctokit(token);
+  const owner = github.context.repo.owner;
+  const repo = github.context.repo.repo;
   
-  const { data: pullCommits } = await octokit.repos.listCommits({
-    owner: owner,
-    repo: repo,
-    pull_number: github.context.ref
-  });
+  //console.log('context.ref is: ${github.context.ref}');
   
-  //const {data: pullCommits} = await octokit.pulls.listCommits({
-  //  owner: 'dotnet',
-  //  repo: 'docs',
-  //  pull_number: 23493
+  //const { data: pullCommits } = await octokit.repos.listCommits({
+  //  owner: owner,
+  //  repo: repo,
+  //  pull_number: github.context.ref
   //});
   
-  const sha: string = pullCommits[0].sha;
+  //const sha: string = pullCommits[0].sha;
+  const sha = process.env['GITHUB_SHA'] || null;
   
+  if (sha) {
   // Get the completed build status.
   for (let i = 0; i < 360; i+=10) {
   
@@ -73,7 +69,7 @@ export async function checkStatus() {
       }
       else
       {
-        debug("OpenPublishing.Build status check did not have warnings.");
+        console.log("OpenPublishing.Build status check did not have warnings.");
         return null;
       }
     }
@@ -81,11 +77,16 @@ export async function checkStatus() {
     {
       // Build status is error, so merging will be blocked.
       // Or, we didn't find the OpenPublishing.Build status check.
-      debug("buildStatus is null or buildStatus is not success.");
+      
+      if (buildStatus == null)
+        console.log("Could not find the OpenPublishing.Build status check.");
+      else
+        console.log("OpenPublishing.Build status is either failure or error.");
+      
       return null;
     }
   }
-  } else {
-    debug("Unable to get the GITHUB_TOKEN from the environment.");
-  }
+} else {
+    console.log("Unable to get GITHUB_SHA from the environment.");
+}
 }

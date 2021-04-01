@@ -1,23 +1,10 @@
 name: 'Status check checker'
-description: "Checks a specified status check's description for specific text, and then adds a new status check with a state of failure if the text is found."
+description: "Checks the OpenPublishing.Build's status check's description to see if there are build warnings, and adds a new status check with a state of failure if build warnings are present."
 author: 'Genevieve Warren'
 inputs:
-  check-context:
-    required: false
-    description: 'Context of status check to check.'
-    default: 'OpenPublishing.Build'
-  check-description:
-    required: false
-    description: 'Description text that warrants a new status check with state=failure.'
-    default: 'Validation status: warnings'
-  add-context:
-    required: false
-    description: 'Context of new status check to add.'
-    default: 'Check for build warnings'
-  add-description:
-    required: false
-    description: 'Description of new status check to add.'
-    default: 'Please fix build warnings before merging.'
+  repo-token:
+    description: 'The GITHUB_TOKEN secret'
+    required: true
 runs:
   using: 'node12'
-  main: 'dist/index.js'
+  main: 'lib/index.js'
