@@ -7,6 +7,6 @@ jobs:
     steps:
     - name: Status checker action step
       id: checkStatus
-      uses: gewarren/status-check-description-checker@8f1d196dd5bdf45d8df282d07694cf69df973d41
+      uses: gewarren/status-check-description-checker@39c60da562fef6370d2154ffbaae268e14574361
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
