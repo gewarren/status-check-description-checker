@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  status_checker_job:
+    runs-on: ubuntu-latest
+    name: Checks the OpenPublishing.Build status check for build warnings
+    steps:
+    - name: Status checker action step
+      id: checkStatus
+      uses: gewarren/status-check-description-checker
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
